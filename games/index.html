@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Bobr AI · Игры</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#FFF7EA;--paper:#FFFDF8;--wood:#8A5A34;--wood-d:#5E3B1E;--honey:#F5B53F;--river:#3FA7C9;--river-l:#DDF2F8;--leaf:#6DB36A;--leaf-l:#E6F4E2;--humo:#2AA79B;--ink:#3A2A1C;--muted:#7A6652;--coral:#F07C5A}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--cream);color:var(--ink);font-family:"Baloo 2","Trebuchet MS",system-ui,sans-serif}
+body{min-height:100vh;overscroll-behavior:none;overflow-x:hidden}
+header h1,.choice>div,.bubble{min-width:0}
+.wrap{width:100%}
+.wrap{max-width:520px;margin:0 auto;padding:14px 16px 28px}
+header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+header img{width:52px;height:52px;border-radius:50%;background:var(--paper);box-shadow:0 4px 12px rgba(94,59,30,.18)}
+header h1{font-size:22px;line-height:1.1;margin:0;flex:1}
+header h1 small{display:block;font-size:13px;color:var(--muted);font-weight:500}
+.lang{display:flex;background:var(--paper);border-radius:999px;padding:3px;box-shadow:0 2px 8px rgba(94,59,30,.12)}
+.lang button{border:0;background:none;font:inherit;font-weight:700;font-size:13px;padding:4px 10px;border-radius:999px;color:var(--muted);cursor:pointer}
+.lang button.on{background:var(--honey);color:var(--ink)}
+.menu{display:grid;gap:14px;margin-top:8px}
+.choice{display:flex;align-items:center;gap:14px;background:var(--paper);border:0;border-radius:24px;padding:18px;text-align:left;font:inherit;color:inherit;cursor:pointer;box-shadow:0 6px 18px rgba(94,59,30,.12);transition:transform .15s}
+.choice:active{transform:scale(.97)}
+.choice .ic{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;font-size:34px;flex:none}
+.choice b{font-size:21px;display:block}
+.choice span{color:var(--muted);font-size:15px;line-height:1.25}
+.say{display:flex;gap:10px;align-items:flex-start;margin:6px 0 14px}
+.say img{width:44px;height:44px;border-radius:50%;flex:none}
+.bubble{background:var(--paper);border-radius:18px 18px 18px 4px;padding:10px 14px;font-size:16px;line-height:1.3;box-shadow:0 3px 10px rgba(94,59,30,.10)}
+.bar{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.back{border:0;background:var(--paper);border-radius:999px;padding:6px 14px;font:inherit;font-weight:700;color:var(--wood-d);cursor:pointer;box-shadow:0 2px 8px rgba(94,59,30,.12)}
+.pill{background:var(--paper);border-radius:999px;padding:6px 12px;font-weight:700;font-size:15px;box-shadow:0 2px 8px rgba(94,59,30,.10)}
+.pill i{font-style:normal;color:var(--muted);font-weight:500;margin-right:4px}
+.lv{display:flex;gap:6px;margin-left:auto}
+.lv button{border:0;width:36px;height:36px;border-radius:12px;font:inherit;font-weight:800;background:var(--paper);color:var(--muted);cursor:pointer}
+.lv button.on{background:var(--river);color:#fff}
+/* memory */
+.grid{display:grid;gap:9px;perspective:900px}
+.card{position:relative;aspect-ratio:3/4;cursor:pointer}
+.card .in{position:absolute;inset:0;transition:transform .45s cubic-bezier(.3,1.3,.5,1);transform-style:preserve-3d}
+.card.open .in,.card.done .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:18px;backface-visibility:hidden;display:grid;place-items:center;text-align:center;padding:4px}
+.back-f{background:radial-gradient(circle at 30% 25%,#B98352,var(--wood) 60%,var(--wood-d));box-shadow:inset 0 0 0 4px rgba(255,255,255,.12),0 4px 10px rgba(94,59,30,.25)}
+.back-f::after{content:"";width:46%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#E8C08F 0 18%,#C9925C 19% 34%,#E8C08F 35% 50%,#C9925C 51% 66%,#E8C08F 67%);opacity:.9}
+.front-f{background:var(--paper);transform:rotateY(180deg);box-shadow:0 4px 10px rgba(94,59,30,.15);font-weight:800;color:var(--wood-d);line-height:1.05}
+.card.done .front-f{background:var(--leaf-l);color:#2E6B2B;box-shadow:inset 0 0 0 3px var(--leaf)}
+.card.bad .front-f{animation:shake .35s}
+@keyframes shake{25%{transform:rotateY(180deg) translateX(-5px)}75%{transform:rotateY(180deg) translateX(5px)}}
+.n{font-size:clamp(20px,6.4vw,30px)}
+.n.s{font-size:clamp(14px,4.2vw,19px)}
+/* dam */
+.board{position:relative;background:linear-gradient(#7FC6DD,var(--river));border-radius:24px;padding:10px;touch-action:none;user-select:none;box-shadow:0 8px 22px rgba(63,167,201,.35)}
+.cells{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.cell{aspect-ratio:1;border-radius:16px;background:rgba(255,255,255,.28)}
+.tiles{position:absolute;inset:10px}
+.tile{position:absolute;display:grid;place-items:center;border-radius:16px;font-weight:800;color:#fff;transition:left .12s,top .12s;text-shadow:0 1px 2px rgba(0,0,0,.25);box-shadow:inset 0 -6px 0 rgba(0,0,0,.14),0 3px 6px rgba(0,0,0,.18)}
+.tile::before{content:"";position:absolute;right:8%;top:50%;width:22%;aspect-ratio:1;transform:translateY(-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.35) 0 20%,transparent 22% 40%,rgba(255,255,255,.25) 42% 55%,transparent 57%);}
+.tile.new{animation:pop .18s}
+.tile.merged{animation:pop .2s}
+@keyframes pop{0%{transform:scale(.6)}70%{transform:scale(1.1)}100%{transform:scale(1)}}
+.hint{color:var(--muted);font-size:14px;text-align:center;margin-top:10px}
+.btn{border:0;background:var(--honey);color:var(--ink);font:inherit;font-weight:800;font-size:17px;border-radius:999px;padding:10px 22px;cursor:pointer;box-shadow:0 4px 10px rgba(245,181,63,.4)}
+/* win overlay */
+.win{position:fixed;inset:0;background:rgba(58,42,28,.45);display:none;place-items:center;padding:20px;z-index:10}
+.win.on{display:grid}
+.win .box{background:var(--paper);border-radius:28px;padding:22px;text-align:center;max-width:340px;animation:pop .3s}
+.win img{width:150px;height:150px;object-fit:contain}
+.win h2{margin:6px 0 4px;font-size:26px}
+.win p{margin:0 0 14px;color:var(--muted);font-size:16px}
+[data-lang="uz"] .ru,[data-lang="ru"] .uz{display:none}
+footer{margin-top:22px;text-align:center;color:var(--muted);font-size:13px}
+footer a{color:var(--river)}
+</style>
+</head>
+<body data-lang="ru">
+<div class="wrap">
+  <header>
+    <img src="img/bobr.png" alt="Бобр">
+    <h1>Bobr AI <span class="ru">· Игры</span><span class="uz">· Oʻyinlar</span><small class="ru">Разминка для ума перед уроком</small><small class="uz">Darsdan oldin miya uchun badantarbiya</small></h1>
+    <div class="lang"><button data-l="ru" class="on">RU</button><button data-l="uz">UZ</button></div>
+  </header>
+
+  <section id="menu">
+    <div class="say"><img src="img/bobr.png" alt=""><div class="bubble"><span class="ru">Салом! Давай разомнёмся 🦫 Выбирай игру — я уже грызу карандаш от нетерпения.</span><span class="uz">Salom! Keling, badantarbiya qilamiz 🦫 Oʻyinni tanlang — men allaqachon qalamni kemiryapman.</span></div></div>
+    <div class="menu">
+      <button class="choice" data-go="mem"><div class="ic" style="background:var(--leaf-l)">🃏</div><div><b class="ru">Найди пару</b><b class="uz">Juftini top</b><span class="ru">Открывай карточки и соединяй пример с ответом: ½ и 0,5, 3×4 и 12…</span><span class="uz">Kartalarni oching va misolni javob bilan birlashtiring: ½ va 0,5, 3×4 va 12…</span></div></button>
+      <button class="choice" data-go="dam"><div class="ic" style="background:var(--river-l)">🪵</div><div><b class="ru">Плотина Бобра</b><b class="uz">Bobr toʻgʻoni</b><span class="ru">Сдвигай брёвна: одинаковые склеиваются и растут вдвое. Построй бревно 2048!</span><span class="uz">Gʻoʻlalarni suring: bir xillari qoʻshilib ikki barobar oʻsadi. 2048 gʻoʻlasini quring!</span></div></button>
+    </div>
+  </section>
+
+  <section id="mem" hidden>
+    <div class="bar">
+      <button class="back" data-go="menu">←</button>
+      <div class="pill"><i class="ru">ходы</i><i class="uz">yurish</i><span id="moves">0</span></div>
+      <div class="pill"><i class="ru">пары</i><i class="uz">juft</i><span id="pairs">0/0</span></div>
+      <div class="lv" id="lvls"><button data-lv="0" class="on">1</button><button data-lv="1">2</button><button data-lv="2">3</button></div>
+    </div>
+    <div class="say"><img src="img/bobr.png" alt=""><div class="bubble" id="memSay"></div></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="dam" hidden>
+    <div class="bar">
+      <button class="back" data-go="menu">←</button>
+      <div class="pill"><i class="ru">очки</i><i class="uz">ball</i><span id="score">0</span></div>
+      <div class="pill"><i class="ru">рекорд</i><i class="uz">rekord</i><span id="best">0</span></div>
+      <button class="btn" id="newDam" style="margin-left:auto;padding:6px 16px;font-size:15px"><span class="ru">Заново</span><span class="uz">Qaytadan</span></button>
+    </div>
+    <div class="say"><img src="img/bobr.png" alt=""><div class="bubble" id="damSay"></div></div>
+    <div class="board" id="board"><div class="cells" id="cells"></div><div class="tiles" id="tiles"></div></div>
+    <div class="hint"><span class="ru">Свайп по полю или стрелки на клавиатуре</span><span class="uz">Maydonda suring yoki klaviatura strelkalari</span></div>
+  </section>
+
+  <footer><span class="ru">Bobr AI — учи Бобра и поймёшь сам.</span><span class="uz">Bobr AI — Bobrga oʻrgating va oʻzingiz tushunasiz.</span> <a href="../">bobrai.uz</a></footer>
+</div>
+
+<div class="win" id="win"><div class="box"><img id="winImg" src="img/st1.png" alt=""><h2 id="winH"></h2><p id="winP"></p><button class="btn" id="winBtn"></button></div></div>
+
+<script>
+const tg = window.Telegram && Telegram.WebApp; try{ tg && tg.ready(); tg && tg.expand(); }catch(e){}
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let L = store.get('bobr-lang') || ((tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.language_code==='uz')?'uz':'ru');
+const T={
+ ru:{memHi:'Открой две карточки. Пример и его ответ — пара! Я буду считать ходы 🦫',good:['Ого, устоз! Это пара!','Rahmat, ustoz! Запомнил!','Вот это да — точно!','Мой хвост аплодирует!'],miss:['Хм, не пара. Брёвнышко подумает…','Почти! Попробуй ещё.','Ой, перепутал… бывает и у бобров.'],memWin:'Все пары найдены!',memWinP:n=>`Ходов: ${n}. Ты настоящий устоз!`,next:'Дальше',again:'Ещё раз',
+     damHi:'Сдвигай брёвна. Одинаковые склеиваются и растут вдвое. Строим плотину до 2048! 🪵',damBig:v=>`Бревно ${v}! Плотина крепнет 💪`,damOver:'Брёвна закончились',damOverP:s=>`Очки: ${s}. Построим ещё одну плотину?`,damWin:'Бревно 2048!',damWinP:'Плотина готова — ты лучший строитель реки!',keep:'Строить дальше'},
+ uz:{memHi:'Ikkita kartani oching. Misol va uning javobi — juft! Men yurishlarni sanayman 🦫',good:['Voy, ustoz! Bu juft!','Rahmat, ustoz! Esladim!','Mana bu toʻgʻri!','Dumim qarsak chalyapti!'],miss:['Hmm, juft emas. Oʻylab koʻraman…','Deyarli! Yana urinib koʻring.','Voy, adashtirdim… bobrlarda ham boʻladi.'],memWin:'Barcha juftlar topildi!',memWinP:n=>`Yurishlar: ${n}. Siz haqiqiy ustozsiz!`,next:'Keyingisi',again:'Yana bir bor',
+     damHi:'Gʻoʻlalarni suring. Bir xillari qoʻshilib ikki barobar oʻsadi. 2048 gacha toʻgʻon quramiz! 🪵',damBig:v=>`${v} gʻoʻla! Toʻgʻon mustahkamlanmoqda 💪`,damOver:'Gʻoʻlalar tugadi',damOverP:s=>`Ball: ${s}. Yana bir toʻgʻon quramizmi?`,damWin:'2048 gʻoʻla!',damWinP:'Toʻgʻon tayyor — siz daryoning eng zoʻr quruvchisisiz!',keep:'Qurishni davom ettirish'}};
+function setLang(l){L=l;document.body.dataset.lang=l;document.documentElement.lang=l;store.set('bobr-lang',l);document.querySelectorAll('.lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));sayMem(T[L].memHi);sayDam(T[L].damHi);if(curLv!=null)renderMem();}
+document.querySelectorAll('.lang button').forEach(b=>b.onclick=()=>setLang(b.dataset.l));
+function show(id){['menu','mem','dam'].forEach(s=>document.getElementById(s).hidden=s!==id);if(id==='mem'&&!deck.length)startMem(0);if(id==='dam'&&!grid.flat().some(x=>x))newDam();window.scrollTo(0,0);try{tg&&tg.HapticFeedback&&tg.HapticFeedback.selectionChanged()}catch(e){}}
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));
+function haptic(t){try{tg&&tg.HapticFeedback&&tg.HapticFeedback.notificationOccurred(t)}catch(e){}}
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const winEl=document.getElementById('win');
+function win(img,h,p,btn,fn){document.getElementById('winImg').src=img;document.getElementById('winH').textContent=h;document.getElementById('winP').textContent=p;const b=document.getElementById('winBtn');b.textContent=btn;b.onclick=()=>{winEl.classList.remove('on');fn&&fn()};winEl.classList.add('on');haptic('success');}
+
+/* ===== Найди пару ===== */
+// пары проверены вычислением (Fraction): 3·4=12, 36:6=6, 7+8=15, 2³=8, 5·5=25, 100−45=55; ½=0,5, ¼=0,25, ¾=75%, 1/10=0,1, 2/5=0,4, 1/5=20%, 3/10=30%;
+// 10% от 50=5, 25% от 80=20, 2³=8, ½+⅓=5/6, периметр квадрата 3→12, среднее 2,4,6→4, x+7=13→6, ¾−¼=½
+const LEVELS=[
+ [['3 × 4','12'],['36 : 6','6'],['7 + 8','15'],['2³','8'],['5 × 5','25'],['100 − 45','55']],
+ [['½','0,5'],['¼','0,25'],['¾','75%'],['1/10','0,1'],['2/5','0,4'],['1/5','20%'],['3/10','30%']],
+ [[{ru:'10% от 50',uz:'50 ning 10%'},'5'],[{ru:'25% от 80',uz:'80 ning 25%'},'20'],['2³','8'],['½ + ⅓','5/6'],[{ru:'P квадрата, a = 3',uz:'Kvadrat P, a = 3'},'12'],[{ru:'среднее 2, 4, 6',uz:'oʻrtacha 2, 4, 6'},'4'],['x + 7 = 13','x = 6'],['¾ − ¼','½']]
+];
+let deck=[],open=[],moves=0,found=0,curLv=null,lock=false;
+const gridEl=document.getElementById('grid');
+const lbl=v=>typeof v==='object'?v[L]:v;
+function sayMem(t){document.getElementById('memSay').textContent=t}
+function startMem(lv){curLv=lv;moves=0;found=0;open=[];lock=false;
+ document.querySelectorAll('#lvls button').forEach(b=>b.classList.toggle('on',+b.dataset.lv===lv));
+ deck=[];LEVELS[lv].forEach((p,i)=>{deck.push({pair:i,v:p[0]});deck.push({pair:i,v:p[1]})});
+ for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]]}
+ deck.forEach(c=>{c.open=false;c.done=false});sayMem(T[L].memHi);renderMem();}
+function renderMem(){const cols=deck.length>14?4:(deck.length>12?4:3);gridEl.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+ gridEl.innerHTML='';deck.forEach((c,i)=>{const d=document.createElement('div');d.className='card'+(c.open?' open':'')+(c.done?' done':'');
+  const t=lbl(c.v);d.innerHTML=`<div class="in"><div class="face back-f"></div><div class="face front-f"><span class="n${t.length>6?' s':''}">${t}</span></div></div>`;
+  d.onclick=()=>flip(i,d);gridEl.appendChild(d)});
+ document.getElementById('moves').textContent=moves;document.getElementById('pairs').textContent=found+'/'+LEVELS[curLv].length;}
+function flip(i,el){const c=deck[i];if(lock||c.open||c.done)return;c.open=true;el.classList.add('open');open.push(i);
+ if(open.length===2){moves++;document.getElementById('moves').textContent=moves;const[a,b]=open.map(k=>deck[k]);
+  if(a.pair===b.pair){a.done=b.done=true;found++;open=[];sayMem(pick(T[L].good));haptic('success');setTimeout(()=>{renderMem();if(found===LEVELS[curLv].length){const last=curLv===2;setTimeout(()=>win('img/st'+(last?4:1)+'.png',T[L].memWin,T[L].memWinP(moves),last?T[L].again:T[L].next,()=>startMem(last?0:curLv+1)),350)}},300)}
+  else{lock=true;sayMem(pick(T[L].miss));haptic('warning');const els=[...gridEl.children];open.forEach(k=>els[k].classList.add('bad'));
+   setTimeout(()=>{open.forEach(k=>deck[k].open=false);open=[];lock=false;renderMem()},850)}}}
+document.querySelectorAll('#lvls button').forEach(b=>b.onclick=()=>startMem(+b.dataset.lv));
+
+/* ===== Плотина Бобра ===== */
+const N=4;let grid=[],score=0,best=+(store.get('bobr-dam-best')||0),won=false,ids=0,tiles=[];
+const COL={2:'#C99A6B',4:'#B98352',8:'#A86F3F',16:'#8A5A34',32:'#6DB36A',64:'#4E9A4B',128:'#3FA7C9',256:'#2B86AB',512:'#2AA79B',1024:'#F5B53F',2048:'#F07C5A'};
+const cellsEl=document.getElementById('cells'),tilesEl=document.getElementById('tiles');
+for(let i=0;i<16;i++){const c=document.createElement('div');c.className='cell';cellsEl.appendChild(c)}
+function sayDam(t){document.getElementById('damSay').textContent=t}
+function empty(){const e=[];for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(!grid[r][c])e.push([r,c]);return e}
+function add(){const e=empty();if(!e.length)return;const[r,c]=pick(e);grid[r][c]={id:++ids,v:Math.random()<.9?2:4,isNew:true}}
+function newDam(){grid=Array.from({length:N},()=>Array(N).fill(null));score=0;won=false;add();add();sayDam(T[L].damHi);drawDam()}
+function drawDam(){const box=tilesEl.getBoundingClientRect().width||300;const gap=10,sz=(box-gap*3)/4;
+ const seen=new Set();for(let r=0;r<N;r++)for(let c=0;c<N;c++){const t=grid[r][c];if(!t)continue;seen.add(t.id);
+  let el=tilesEl.querySelector(`[data-id="${t.id}"]`);if(!el){el=document.createElement('div');el.className='tile';el.dataset.id=t.id;tilesEl.appendChild(el)}
+  el.style.width=el.style.height=sz+'px';el.style.left=c*(sz+gap)+'px';el.style.top=r*(sz+gap)+'px';el.style.background=COL[t.v]||'#5E3B1E';
+  el.style.fontSize=(t.v<100?sz*.42:t.v<1000?sz*.34:sz*.27)+'px';el.textContent=t.v;
+  el.classList.toggle('new',!!t.isNew);el.classList.toggle('merged',!!t.merged);t.isNew=false;t.merged=false}
+ tilesEl.querySelectorAll('.tile').forEach(el=>{if(!seen.has(+el.dataset.id))el.remove()});
+ document.getElementById('score').textContent=score;if(score>best){best=score;store.set('bobr-dam-best',best)}document.getElementById('best').textContent=best;}
+function move(dir){// 0 left 1 right 2 up 3 down
+ let moved=false,maxNew=0;
+ for(let k=0;k<N;k++){let line=[];for(let i=0;i<N;i++){const[r,c]=dir<2?[k,dir?N-1-i:i]:[dir===2?i:N-1-i,k];line.push(grid[r][c])}
+  const vals=line.filter(Boolean),out=[];for(let i=0;i<vals.length;i++){if(i+1<vals.length&&vals[i].v===vals[i+1].v){const v=vals[i].v*2;out.push({id:vals[i+1].id,v,merged:true});score+=v;maxNew=Math.max(maxNew,v);i++}else out.push(vals[i])}
+  while(out.length<N)out.push(null);
+  for(let i=0;i<N;i++){const[r,c]=dir<2?[k,dir?N-1-i:i]:[dir===2?i:N-1-i,k];if((grid[r][c]&&grid[r][c].id)!==(out[i]&&out[i].id)||(out[i]&&out[i].merged))moved=true;grid[r][c]=out[i]}}
+ if(!moved)return;add();drawDam();
+ if(maxNew>=64)sayDam(T[L].damBig(maxNew));
+ if(maxNew>=2048&&!won){won=true;setTimeout(()=>win('img/st4.png',T[L].damWin,T[L].damWinP,T[L].keep),250)}
+ else if(!canMove())setTimeout(()=>win('img/st7.png',T[L].damOver,T[L].damOverP(score),T[L].again,newDam),300);}
+function canMove(){if(empty().length)return true;for(let r=0;r<N;r++)for(let c=0;c<N;c++){const v=grid[r][c].v;if(c<N-1&&grid[r][c+1].v===v)return true;if(r<N-1&&grid[r+1][c].v===v)return true}return false}
+document.getElementById('newDam').onclick=newDam;
+document.addEventListener('keydown',e=>{if(document.getElementById('dam').hidden)return;const m={ArrowLeft:0,ArrowRight:1,ArrowUp:2,ArrowDown:3}[e.key];if(m!=null){e.preventDefault();move(m)}});
+let sx=0,sy=0;const bd=document.getElementById('board');
+bd.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+bd.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.max(Math.abs(dx),Math.abs(dy))<24)return;move(Math.abs(dx)>Math.abs(dy)?(dx>0?1:0):(dy>0?3:2))});
+window.addEventListener('resize',()=>{if(!document.getElementById('dam').hidden)drawDam()});
+window.bobrMove=move;window.bobrShow=show;
+setLang(L);
+const q=new URLSearchParams(location.search).get('g');if(q==='mem'||q==='dam')show(q);
+</script>
+</body>
+</html>
