@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Бобр ИИ · пич</title>
+<meta name="description" content="Бобр ИИ — математика 5 класса через «учи другого». Национальный AI-хакатон 2026.">
+<style>
+:root{--bg:#fff8ec;--ink:#3b2a1a;--soft:#7a5c3e;--wood:#a8692f;--river:#2f9bb3;--leaf:#5fae5a;--sun:#f4b63f;--card:#ffffff;--shadow:0 10px 30px rgba(90,58,30,.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;overflow:hidden}
+.deck{position:relative;width:100vw;height:100vh}
+.s{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:6vh 6vw;opacity:0;visibility:hidden;transition:opacity .5s ease,visibility .5s}
+.s.on{opacity:1;visibility:visible}
+.s .in>*{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.s.on .in>*{opacity:1;transform:none}
+.s.on .in>*:nth-child(2){transition-delay:.15s}.s.on .in>*:nth-child(3){transition-delay:.3s}.s.on .in>*:nth-child(4){transition-delay:.45s}.s.on .in>*:nth-child(5){transition-delay:.6s}
+.in{max-width:1100px;width:100%}
+.row{display:flex;align-items:center;gap:5vw}
+.k{font-size:clamp(13px,1.4vw,16px);letter-spacing:.14em;text-transform:uppercase;color:var(--river);font-weight:700;margin-bottom:2vh}
+h1{font-size:clamp(34px,5.6vw,72px);line-height:1.08;font-weight:800}
+h2{font-size:clamp(28px,4.2vw,54px);line-height:1.12;font-weight:800}
+p.l{font-size:clamp(17px,2vw,26px);line-height:1.45;color:var(--soft);margin-top:2.4vh;max-width:820px}
+.hl{color:var(--wood)}
+.pic{width:min(34vw,360px);border-radius:28px;box-shadow:var(--shadow);flex-shrink:0}
+.st{width:min(22vw,210px);flex-shrink:0;filter:drop-shadow(0 8px 14px rgba(90,58,30,.18))}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:3vh}
+.c{background:var(--card);border-radius:20px;padding:18px 20px;box-shadow:var(--shadow);font-size:clamp(15px,1.6vw,20px);line-height:1.35}
+.c b{display:block;font-size:clamp(17px,1.9vw,23px);margin-bottom:6px}
+.c .e{font-size:28px;display:block;margin-bottom:6px}
+.chat{display:flex;flex-direction:column;gap:10px;margin-top:2.5vh;max-width:860px}
+.m{padding:12px 16px;border-radius:18px;font-size:clamp(14px,1.55vw,19px);line-height:1.4;max-width:88%;box-shadow:var(--shadow)}
+.m.kid{align-self:flex-end;background:#dff1f4}
+.m.bobr{align-self:flex-start;background:#fff}
+.m.humo{align-self:flex-start;background:#eaf6e4}
+.m small{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-bottom:3px;font-weight:700}
+.m.bad{border:2px dashed #e07a5f}
+.heroes{display:flex;gap:4vw;justify-content:center;margin-top:3vh;flex-wrap:wrap}
+.hero{background:#fff;border-radius:26px;box-shadow:var(--shadow);padding:18px;width:min(40vw,360px);text-align:center}
+.hero img{width:100%;border-radius:18px}
+.hero b{display:block;font-size:clamp(20px,2.3vw,28px);margin-top:10px}
+.hero span{display:block;color:var(--soft);font-size:clamp(14px,1.5vw,18px);margin-top:4px;line-height:1.35}
+.dam{display:flex;gap:6px;align-items:flex-end;margin-top:3vh;height:70px}
+.dam i{display:block;width:34px;border-radius:8px;background:linear-gradient(#c58a4f,#8a5426);box-shadow:inset 0 -4px 0 rgba(0,0,0,.15)}
+.qr{width:min(30vw,250px);border-radius:20px;box-shadow:var(--shadow);background:#fff;padding:10px}
+.btn{display:inline-block;margin-top:3vh;background:var(--river);color:#fff;text-decoration:none;font-weight:800;font-size:clamp(17px,1.9vw,24px);padding:14px 28px;border-radius:999px;box-shadow:var(--shadow)}
+.foot{margin-top:4vh;font-size:13px;color:#a08a72}
+.badge{display:inline-block;background:var(--sun);color:var(--ink);font-weight:800;font-size:clamp(15px,1.7vw,21px);padding:8px 18px;border-radius:999px;margin-bottom:2.2vh;box-shadow:var(--shadow)}
+.big{font-size:clamp(22px,2.8vw,36px);font-weight:800;margin-top:2.4vh}
+.team{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-top:3vh}
+.tm{background:#fff;border-radius:20px;box-shadow:var(--shadow);padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.ph{width:min(13vw,130px);aspect-ratio:1;border-radius:50%;border:3px dashed #e2cfb4;display:flex;align-items:center;justify-content:center;font-size:32px;overflow:hidden;background:#fff8ec}
+.ph img{width:100%;height:100%;object-fit:cover}
+.tm b{font-size:clamp(15px,1.6vw,20px)} .tm i{font-style:normal;color:var(--river);font-weight:700;font-size:clamp(12px,1.3vw,15px)} .tm q{font-size:clamp(12px,1.2vw,14px);color:#a08a72;quotes:"«" "»"}
+@media (max-width:700px){.team{grid-template-columns:repeat(2,minmax(0,1fr))}.ph{width:28vw}}
+.num{display:block;font-size:clamp(26px,3.4vw,44px);font-weight:800;color:var(--wood);margin:4px 0}
+.src{font-size:12px;color:#a08a72;margin-top:2.4vh;line-height:1.4;max-width:900px}
+table.cmp{width:100%;border-collapse:separate;border-spacing:0 8px;margin-top:2.5vh;font-size:clamp(14px,1.6vw,20px)}
+table.cmp th{font-size:clamp(13px,1.4vw,17px);color:var(--soft);padding:4px 10px;text-align:center}
+table.cmp th:nth-child(2){color:var(--wood)}
+table.cmp td{background:#fff;padding:10px 12px;text-align:center}
+table.cmp td:first-child{text-align:left;border-radius:14px 0 0 14px;font-weight:700}
+table.cmp td:last-child{border-radius:0 14px 14px 0}
+table.cmp td:nth-child(2){background:#fff3dc}
+.kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:3vh;position:relative}
+.kp{background:#fff;border-radius:20px;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:8px;border-top:6px solid var(--leaf)}
+.kp b{font-size:clamp(18px,2vw,24px);color:var(--wood)} .kp span{font-size:clamp(13px,1.4vw,17px);line-height:1.35} .kp em{font-style:normal;color:#a08a72;font-size:clamp(12px,1.3vw,15px)}
+@media (max-width:700px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))} table.cmp{font-size:13px} table.cmp td{padding:7px 5px}}
+.nav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:5}
+.nav i{width:9px;height:9px;border-radius:50%;background:#e2cfb4;cursor:pointer}
+.nav i.on{background:var(--wood);width:26px;border-radius:6px}
+.lang{position:fixed;top:16px;right:18px;z-index:6;display:flex;gap:4px;background:#fff;border-radius:999px;padding:4px;box-shadow:var(--shadow)}
+.lang button{border:0;background:transparent;font:inherit;font-weight:700;font-size:14px;padding:6px 12px;border-radius:999px;cursor:pointer;color:var(--soft)}
+.lang button.on{background:var(--sun);color:var(--ink)}
+.arr{position:fixed;top:50%;transform:translateY(-50%);z-index:5;border:0;background:#fff;width:44px;height:44px;border-radius:50%;box-shadow:var(--shadow);font-size:20px;cursor:pointer;color:var(--wood)}
+.arr.p{left:14px}.arr.n{right:14px}
+[data-uz]{}
+body.uz [data-ru-only]{display:none}
+@media (max-width:700px){
+ .row{flex-direction:column;gap:3vh;text-align:center}
+ .pic{width:62vw}.st{width:40vw}
+ .s{padding:8vh 16px 10vh;align-items:flex-start;overflow-y:auto}
+ .hero{width:44vw;padding:10px}
+ .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .c{padding:12px 14px}
+ h1,h2{overflow-wrap:anywhere}
+ .in{max-width:100%}
+ .arr{display:none}
+ p.l{margin-left:auto;margin-right:auto}
+ .dam{justify-content:center}
+}
+</style>
+</head>
+<body>
+<div class="lang"><button class="on" data-l="ru">RU</button><button data-l="uz">UZ</button></div>
+<div class="deck">
+
+<section class="s on"><div class="in row">
+ <img class="pic" src="bobr-avatar.jpg" alt="Бобр">
+ <div>
+  <div class="badge" data-t="⚡ Этот прототип мы сделали за один день|⚡ Bu prototipni bir kunda yaratdik"></div>
+  <h1 data-t="Бобр ИИ|Bobr AI"></h1>
+  <p class="l" data-t="Telegram-бот, где ребёнок учит Бобра математике 5 класса, а мудрая Хумо подсказывает. На узбекском и русском.|Bola Bobrga 5-sinf matematikasini oʻrgatadigan, dono Humo esa maslahat beradigan Telegram-bot. Oʻzbek va rus tillarida."></p>
+ </div>
+</div></section>
+
+<section class="s"><div class="in row">
+ <img class="st" src="sticker-2.png" alt="Бобр чешет голову">
+ <div>
+  <div class="k" data-t="Проблема|Muammo"></div>
+  <h1 data-t="«Зачем мне эти дроби?»|«Bu kasrlar menga nima uchun kerak?»"></h1>
+  <div class="cards">
+   <div class="c"><span class="e">1</span><b data-t="Зубрит без понимания|Tushunmasdan yodlaydi"></b><span data-t="Правило выучено к контрольной и забыто через неделю — ребёнок не видит, зачем это в жизни.|Qoida nazoratga yodlanadi va bir haftada unutiladi — bola bu hayotda nimaga kerakligini koʻrmaydi."></span></div>
+   <div class="c"><span class="e">2</span><b data-t="Помощь не там, где нужна|Yordam kerakli joyda emas"></b><span data-t="Репетитор дорог и не всегда рядом, а чат-бот просто выдаёт готовый ответ — понимание не появляется.|Repetitor qimmat va har doim yonida emas, chat-bot esa tayyor javobni beradi — tushunish paydo boʻlmaydi."></span></div>
+  </div>
+ </div>
+</div></section>
+
+<section class="s"><div class="in">
+ <div class="k" data-t="Рынок|Bozor hajmi"></div>
+ <h2 data-t="Каждый школьник Узбекистана — с телефоном и Telegram|Oʻzbekistonning har bir oʻquvchisi — telefon va Telegram bilan"></h2>
+ <div class="cards">
+  <div class="c"><b>TAM</b><span class="num">$2,1 <span data-t="млрд|mlrd"></span></span><span data-t="мировой рынок ИИ-репетиторов, 2025|jahon AI-repetitorlar bozori, 2025"></span></div>
+  <div class="c"><b>SAM</b><span class="num">6,87 <span data-t="млн|mln"></span></span><span data-t="учеников общеобразовательных школ Узбекистана, 2025/26 учебный год|Oʻzbekiston umumtaʼlim maktablari oʻquvchilari, 2025/26 oʻquv yili"></span></div>
+  <div class="c"><b>SOM</b><span class="num" data-t="5 класс|5-sinf"></span><span data-t="ученики 5 класса школ-пилотов, RU и UZ; число уточняется|pilot maktablarning 5-sinf oʻquvchilari, RU va UZ; soni aniqlanmoqda"></span></div>
+ </div>
+ <p class="src" data-t="Источники: Grand View Research, «AI Tutors Market Size, Share &amp; Trends Analysis Report», 2025; Агентство статистики Узбекистана, 2025/26 учебный год (по данным UzDaily и Zamin.uz).|Manbalar: Grand View Research, «AI Tutors Market Size, Share &amp; Trends Analysis Report», 2025; Oʻzbekiston Statistika agentligi, 2025/26 oʻquv yili (UzDaily va Zamin.uz maʼlumotlari)."></p>
+</div></section>
+
+<section class="s"><div class="in row">
+ <div>
+  <div class="k" data-t="Идея|Gʻoya"></div>
+  <h1 data-t="Ребёнок не учится. <span class='hl'>Он учит.</span>|Bola oʻrganmaydi. <span class='hl'>U oʻrgatadi.</span>"></h1>
+  <p class="l" data-t="Бобр ИИ — неуклюжий ученик, который ничего не знает про математику. Ребёнок становится его устозом и объясняет. Когда трудно — подсказывает мудрая птица Хумо.|Bobr AI — matematikani bilmaydigan qoʻpol shogird. Bola uning ustozi boʻladi va tushuntiradi. Qiyin boʻlsa — dono Humo qushi yordam beradi."></p>
+ </div>
+ <img class="pic" src="bobr-avatar.jpg" alt="Бобр">
+</div></section>
+
+<section class="s"><div class="in">
+ <div class="k" data-t="Почему это работает|Nega bu ishlaydi"></div>
+ <h2 data-t="Чтобы объяснить другому, нужно понять самому.|Boshqaga tushuntirish uchun avval oʻzing tushunishing kerak."></h2>
+ <div class="cards">
+  <div class="c"><span class="e">🗣</span><b data-t="Говорит сам|Oʻzi gapiradi"></b><span data-t="Ребёнок формулирует правило своими словами, а не повторяет за учителем.|Bola qoidani oʻz soʻzlari bilan aytadi, oʻqituvchidan takrorlamaydi."></span></div>
+  <div class="c"><span class="e">🔎</span><b data-t="Видит последствия|Oqibatini koʻradi"></b><span data-t="Объяснил неверно — Бобр ошибся. Ошибка становится видимой и не страшной.|Notoʻgʻri tushuntirdi — Bobr xato qildi. Xato koʻrinadigan va qoʻrqinchsiz boʻladi."></span></div>
+  <div class="c"><span class="e">💛</span><b data-t="Чувствует себя устозом|Oʻzini ustoz his qiladi"></b><span data-t="Не «отстающий ученик», а учитель, которому Бобр говорит «рахмат».|«Orqada qolgan oʻquvchi» emas, Bobr «rahmat» deydigan ustoz."></span></div>
+ </div>
+</div></section>
+
+<section class="s"><div class="in" style="text-align:center">
+ <div class="k" data-t="Герои|Qahramonlar"></div>
+ <h2 data-t="Свои герои — с берегов Чирчика|Oʻz qahramonlarimiz — Chirchiq boʻyidan"></h2>
+ <div class="heroes">
+  <div class="hero"><img src="bobr-avatar.jpg" alt="Бобр"><b data-t="Бобр|Bobr"></b><span data-t="Строит плотины, хочет поровну делить брёвна — но дроби не знает. Смешной над собой, никогда над ребёнком.|Toʻgʻon quradi, yogʻochlarni teng boʻlmoqchi — lekin kasrlarni bilmaydi. Oʻzi ustidan kuladi, hech qachon bola ustidan emas."></span></div>
+  <div class="hero"><img src="humo-avatar.jpg" alt="Хумо"><b data-t="Хумо|Humo"></b><span data-t="Мудрая, спокойная птица счастья. Не даёт ответ — ведёт лесенкой подсказок.|Dono, xotirjam baxt qushi. Javobni bermaydi — maslahatlar zinapoyasi bilan yetaklaydi."></span></div>
+ </div>
+</div></section>
+
+<section class="s"><div class="in">
+ <div class="k" data-t="Живой пример · дроби|Jonli misol · kasrlar"></div>
+ <h2 data-t="Бобр ошибается из-за слов ребёнка|Bobr bolaning soʻzlari tufayli xato qiladi"></h2>
+ <div class="chat">
+  <div class="m bobr"><small>🦫 Bobr</small>1/2 + 1/3. Qanday yechaman? Va nega shunday?</div>
+  <div class="m kid"><small data-t="Ребёнок|Bola"></small>Suratlarni qoʻshamiz, maxrajlarni ham qoʻshamiz</div>
+  <div class="m bobr bad"><small>🦫 Bobr</small>1+1=2, 2+3=5. Demak 2/5. Toʻgʻrimi, ustoz?</div>
+  <div class="m kid"><small data-t="Ребёнок|Bola"></small>Yoʻq, bu notoʻgʻri… bilmayman</div>
+  <div class="m humo"><small>🕊 Humo</small>1/2 — bu necha chorak? Sen ayt.</div>
+  <div class="m kid"><small data-t="Ребёнок|Bola"></small>Avval maxrajlarni bir xil qilamiz…</div>
+ </div>
+</div></section>
+
+<section class="s"><div class="in row">
+ <div>
+  <div class="k" data-t="Что уже работает|Nima allaqachon ishlaydi"></div>
+  <h2 data-t="Живой бот в Telegram — сегодня|Telegramda jonli bot — bugun"></h2>
+  <div class="cards">
+   <div class="c"><b>14</b><span data-t="тем 5 класса: дроби, проценты, уравнения, площадь…|5-sinf mavzusi: kasrlar, foizlar, tenglamalar, yuza…"></span></div>
+   <div class="c"><b>RU · UZ</b><span data-t="отвечает на языке ребёнка|bolaning tilida javob beradi"></span></div>
+   <div class="c"><b data-t="Лесенка подсказок|Maslahat zinapoyasi"></b><span data-t="без готового ответа|tayyor javobsiz"></span></div>
+   <div class="c"><b data-t="Типичные ошибки|Odatiy xatolar"></b><span data-t="Бобр делает их сам, ребёнок исправляет|Bobr oʻzi qiladi, bola tuzatadi"></span></div>
+  </div>
+ </div>
+ <img class="st" src="sticker-4.png" alt="Бобр с медалью">
+</div></section>
+
+<section class="s"><div class="in">
+ <div class="k" data-t="Решение и конкуренты|Yechim va raqobatchilar"></div>
+ <h2 data-t="Чем Бобр лучше|Bobr nimasi bilan yaxshiroq"></h2>
+ <table class="cmp"><thead><tr><th></th><th>Bobr AI</th><th data-t="Репетитор|Repetitor"></th><th data-t="ChatGPT / чат-бот|ChatGPT / chat-bot"></th></tr></thead><tbody><tr><td data-t="Ребёнок объясняет сам|Bola oʻzi tushuntiradi"></td><td class="y">✅</td><td class="n">➖</td><td class="n">➖</td></tr><tr><td data-t="Не даёт готовый ответ|Tayyor javob bermaydi"></td><td class="y">✅</td><td class="y">✅</td><td class="n">➖</td></tr><tr><td data-t="Узбекский и русский|Oʻzbek va rus tili"></td><td class="y">✅</td><td class="y">✅</td><td class="y">✅</td></tr><tr><td data-t="Доступен в любое время|Istalgan vaqtda mavjud"></td><td class="y">✅</td><td class="n">➖</td><td class="y">✅</td></tr><tr><td data-t="Свои герои и игра|Oʻz qahramonlari va oʻyin"></td><td class="y">✅</td><td class="n">➖</td><td class="n">➖</td></tr><tr><td data-t="Доступная цена|Arzon narx"></td><td class="y">✅</td><td class="n">➖</td><td class="y">✅</td></tr></tbody></table>
+ <p class="src" data-t="Сравнение по признакам продукта, наша оценка.|Mahsulot xususiyatlari boʻyicha taqqoslash, bizning bahomiz."></p>
+</div></section>
+
+<section class="s"><div class="in">
+ <div class="k" data-t="Монетизация · предложение|Monetizatsiya · taklif"></div>
+ <h2 data-t="Кто платит и за что|Kim toʻlaydi va nima uchun"></h2>
+ <div class="cards">
+  <div class="c"><span class="e">👪</span><b data-t="Родители|Ota-onalar"></b><span data-t="Freemium: базовые темы бесплатно, подписка — все классы, отчёт о прогрессе, голос.|Freemium: asosiy mavzular bepul, obuna — barcha sinflar, rivojlanish hisoboti, ovoz."></span></div>
+  <div class="c"><span class="e">🏫</span><b data-t="Школы|Maktablar"></b><span data-t="Лицензия на класс: учитель видит, кто где споткнулся, и экономит время на проверке.|Sinf uchun litsenziya: oʻqituvchi kim qayerda qoqilganini koʻradi va tekshirishga vaqt tejaydi."></span></div>
+  <div class="c"><span class="e">🏛</span><b data-t="Министерство|Vazirlik"></b><span data-t="Пилот в регионе: доступ к понятному объяснению там, где репетиторов нет.|Hududda pilot: repetitor yoʻq joyda tushunarli tushuntirishga kirish."></span></div>
+ </div>
+ <p class="src" data-t="Цены — после пилота.|Narxlar — pilotdan keyin."></p>
+</div></section>
+
+<section class="s"><div class="in">
+ <div class="k" data-t="Дальше|Keyingi qadam"></div>
+ <h2 data-t="Плотина растёт с каждой темой|Toʻgʻon har bir mavzu bilan oʻsadi"></h2>
+ <div class="dam"><i style="height:30%"></i><i style="height:45%"></i><i style="height:60%"></i><i style="height:75%"></i><i style="height:90%"></i><i style="height:100%"></i></div>
+ <div class="cards">
+  <div class="c"><span class="e">🪵</span><b data-t="Плотина|Toʻgʻon"></b><span data-t="каждая освоенная тема — бревно|har bir oʻzlashtirilgan mavzu — bitta yogʻoch"></span></div>
+  <div class="c"><span class="e">👪</span><b data-t="Отчёт родителю|Ota-onaga hisobot"></b><span data-t="раз в неделю: что понял, где споткнулся|haftada bir marta: nimani tushundi, qayerda qoqildi"></span></div>
+  <div class="c"><span class="e">🎙</span><b data-t="Голос на узбекском|Oʻzbekcha ovoz"></b><span data-t="дети говорят, а не печатают|bolalar yozmaydi, gapiradi"></span></div>
+  <div class="c"><span class="e">📷</span><b data-t="Фото задачи|Masala surati"></b><span data-t="сфотографировал тетрадь — Бобр понял|daftarni suratga oldi — Bobr tushundi"></span></div>
+  <div class="c"><span class="e">🏫</span><b data-t="Пилот в школе|Maktabda sinov"></b><span data-t="один класс, один месяц|bitta sinf, bir oy"></span></div>
+ </div>
+</div></section>
+
+<section class="s"><div class="in">
+ <div class="k" data-t="Куда растёт Бобр|Bobr qayerga oʻsadi"></div>
+ <h2 data-t="Бобр взрослеет вместе с ребёнком|Bobr bola bilan birga ulgʻayadi"></h2>
+ <div class="dam"><i style="height:40%"></i><i style="height:60%"></i><i style="height:80%"></i><i style="height:100%"></i></div>
+ <div class="cards">
+  <div class="c"><span class="e">🎒</span><b data-t="5 → 6 → 7 класс|5 → 6 → 7-sinf"></b><span data-t="и дальше: Бобр переходит в следующий класс вместе с устозом|va undan keyin: Bobr ustozi bilan birga keyingi sinfga oʻtadi"></span></div>
+  <div class="c"><span class="e">🌍</span><b data-t="Любой язык|Istalgan til"></b><span data-t="узбекский, русский, английский — на языке ребёнка|oʻzbek, rus, ingliz — bolaning tilida"></span></div>
+  <div class="c"><span class="e">🎬</span><b data-t="Каналы с видеоуроками|Video darslar kanallari"></b><span data-t="по каждой теме, на разных языках|har bir mavzu boʻyicha, turli tillarda"></span></div>
+  <div class="c"><span class="e">💌</span><b data-t="Контент, которым делятся|Ulashiladigan kontent"></b><span data-t="ролики и стикеры с Бобром, которые хочется переслать другу|doʻstga yuborging keladigan Bobrli roliklar va stikerlar"></span></div>
+ </div>
+</div></section>
+
+<section class="s"><div class="in">
+ <div class="k" data-t="Вехи и KPI|Maqsadlar va KPI"></div>
+ <h2 data-t="Путь Бобра|Bobrning yoʻli"></h2>
+ <div class="kpi"><div class="kp"><b data-t="Сейчас|Hozir"></b><span data-t="MVP в Telegram · 14 тем · RU/UZ|Telegramda MVP · 14 mavzu · RU/UZ"></span><em>___ <span data-t='детей в пробе|bola sinovda'></span></em></div><div class="kp"><b data-t="6 месяцев|6 oy"></b><span data-t="Пилот в школе · отчёт родителю · голос UZ|Maktabda pilot · ota-onaga hisobot · UZ ovoz"></span><em>___ <span data-t='детей|bola'></span> · ___ <span data-t='школ|maktab'></span></em></div><div class="kp"><b data-t="1 год|1 yil"></b><span data-t="5–7 классы · подписка родителям · лицензия школам|5–7-sinflar · ota-onalarga obuna · maktablarga litsenziya"></span><em>___ <span data-t='детей|bola'></span> · ___ <span data-t='выручка|daromad'></span></em></div><div class="kp"><b data-t="3 года|3 yil"></b><span data-t="Все классы · другие языки и предметы · каналы видеоуроков|Barcha sinflar · boshqa tillar va fanlar · video dars kanallari"></span><em><span data-t='расширение в регионе|mintaqada kengayish'></span></em></div></div>
+ <p class="src" data-t="Числа заполним по итогам пилота.|Raqamlar pilot natijalari boʻyicha toʻldiriladi."></p>
+</div></section>
+
+<section class="s"><div class="in" style="text-align:center">
+ <div class="k" data-t="Команда|Jamoa"></div>
+ <h2 data-t="Пять человек. Один Бобр.|Besh kishi. Bitta Bobr."></h2>
+ <div class="team">
+  <div class="tm"><div class="ph"><img class="pf" src="" alt="" style="display:none"><span>📷</span></div><b data-t="Имя|Ism"></b><i data-t="роль|rol"></i><q data-t="фраза участника|ishtirokchi iborasi"></q></div>
+  <div class="tm"><div class="ph"><img class="pf" src="" alt="" style="display:none"><span>📷</span></div><b data-t="Имя|Ism"></b><i data-t="роль|rol"></i><q data-t="фраза участника|ishtirokchi iborasi"></q></div>
+  <div class="tm"><div class="ph"><img class="pf" src="" alt="" style="display:none"><span>📷</span></div><b data-t="Имя|Ism"></b><i data-t="роль|rol"></i><q data-t="фраза участника|ishtirokchi iborasi"></q></div>
+  <div class="tm"><div class="ph"><img class="pf" src="" alt="" style="display:none"><span>📷</span></div><b data-t="Имя|Ism"></b><i data-t="роль|rol"></i><q data-t="фраза участника|ishtirokchi iborasi"></q></div>
+  <div class="tm"><div class="ph"><img class="pf" src="" alt="" style="display:none"><span>📷</span></div><b data-t="Имя|Ism"></b><i data-t="роль|rol"></i><q data-t="фраза участника|ishtirokchi iborasi"></q></div>
+ </div>
+ <p class="l" style="margin:2vh auto 0" data-t="Национальный AI-хакатон, Ташкент, 17–19 ноября 2026.|Milliy AI-xakaton, Toshkent, 2026-yil 17–19-noyabr."></p>
+</div></section>
+
+<section class="s"><div class="in row">
+ <div>
+  <div class="k" data-t="Попробуйте|Sinab koʻring"></div>
+  <h1 data-t="Станьте устозом.<br>Напишите Бобру.|Ustoz boʻling.<br>Bobrga yozing."></h1>
+  <div class="big" data-t="Этот прототип мы сделали <span class='hl'>за один день</span>.|Bu prototipni <span class='hl'>bir kunda</span> yaratdik."></div>
+  <a class="btn" href="https://t.me/milak_bobr_bot" target="_blank" rel="noopener">t.me/milak_bobr_bot</a>
+  <div class="foot" data-t="ИИ-помощник проекта — Мила, MILAGPT|Loyiha AI-yordamchisi — Mila, MILAGPT"></div>
+ </div>
+ <img class="qr" src="qr.png" alt="QR-код на бота">
+</div></section>
+
+</div>
+<button class="arr p" aria-label="назад">‹</button><button class="arr n" aria-label="вперёд">›</button>
+<div class="nav"></div>
+<script>
+var S=[].slice.call(document.querySelectorAll('.s')),cur=0,nav=document.querySelector('.nav'),lang='ru';
+S.forEach(function(_,i){var d=document.createElement('i');d.onclick=function(){go(i)};nav.appendChild(d)});
+function paint(){[].forEach.call(document.querySelectorAll('[data-t]'),function(e){var p=e.getAttribute('data-t').split('|');e.innerHTML=lang==='uz'?(p[1]||p[0]):p[0]});document.documentElement.lang=lang;document.body.classList.toggle('uz',lang==='uz')}
+function go(i){if(i<0||i>=S.length)return;S[cur].classList.remove('on');cur=i;S[cur].classList.add('on');[].forEach.call(nav.children,function(d,j){d.classList.toggle('on',j===cur)});try{history.replaceState(null,'','#'+(cur+1))}catch(e){}}
+document.addEventListener('keydown',function(e){if(['ArrowRight','PageDown',' '].indexOf(e.key)>-1){e.preventDefault();go(cur+1)}if(['ArrowLeft','PageUp'].indexOf(e.key)>-1){e.preventDefault();go(cur-1)}});
+document.querySelector('.arr.p').onclick=function(){go(cur-1)};document.querySelector('.arr.n').onclick=function(){go(cur+1)};
+var x0=null;document.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});document.addEventListener('touchend',function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)go(cur+(dx<0?1:-1));x0=null});
+[].forEach.call(document.querySelectorAll('.lang button'),function(b){b.onclick=function(){lang=b.getAttribute('data-l');[].forEach.call(document.querySelectorAll('.lang button'),function(x){x.classList.toggle('on',x===b)});paint()}});
+var q=new URLSearchParams(location.search);if(q.get('lang')==='uz'){lang='uz';document.querySelectorAll('.lang button')[1].click()}
+paint();var h=parseInt((location.hash||'').slice(1));go(h>0?h-1:0);
+</script>
+</body>
+</html>
