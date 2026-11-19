@@ -7,7 +7,8 @@
 
 - 🌐 Сайт: https://bobrai.uz · запасной адрес https://bobrai.pages.dev
 - 🎤 Презентация: https://bobrai.pages.dev/pitch/ · PDF в папке `pitch/`
-- 💬 Бот в Telegram: https://t.me/milak_bobr_bot
+- 🏫 Презентация для школ: https://bobrai.uz/pitch-school/ · PDF в папке `pitch-school/`
+- 💬 Бот в Telegram: https://t.me/milak_bobr_bot — живой бот работает на платформе MILAGPT; код в `bot/` — отдельная самостоятельная версия, её можно запустить у себя
 - 🎮 Игры: https://bobrai.pages.dev/games/
 
 ## Что внутри
@@ -18,6 +19,7 @@
 | `agent/` | Роль Бобра, база знаний Хумо (14 тем 5 класса, RU/UZ), тема «дроби», инструкция агента, сценарий показа жюри |
 | `site/` | Лендинг (UZ/RU) |
 | `pitch/` | Презентация для жюри (HTML + PDF) |
+| `pitch-school/` | Презентация для школ и учителей (HTML + PDF) |
 | `games/` | Мини-апп Telegram: «Найди пару» (математика 5 класса, 3 уровня) и «Плотина Бобра» (брёвна склеиваются и растут вдвое) |
 | `art/` | Аватарки Бобра и Хумо, 8 стикеров |
 

@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bobr AI · для школ</title>
+<meta name="description" content="Bobr AI — ИИ-помощник по математике 5 класса для частных школ. Метод «учи другого».">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--br:#6b3f1d;--br2:#8a5428;--tl:#16878a;--tl2:#e3f3f2;--ink:#1d1a17;--mute:#6e665f;--bg:#fbf7f1;--card:#ffffff;--line:#ece3d6}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#2a221b;font-family:Manrope,system-ui,sans-serif;color:var(--ink);overflow:hidden}
+.stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center;}
+.s{position:absolute;inset:0;background:var(--bg);display:none;overflow:hidden;padding:48px 64px 0}
+.s.on{display:block;animation:in .45s ease}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:22px;color:var(--br)}
+.logo img{width:40px;height:40px;border-radius:50%;background:var(--tl2)}
+.logo b{color:var(--tl)}
+.num{position:absolute;right:64px;top:52px;font-size:13px;font-weight:700;color:var(--mute);letter-spacing:.08em}
+h1{font-size:50px;line-height:1.08;font-weight:800;letter-spacing:-.02em;margin-top:30px}
+h1 em,h2 em{font-style:normal;color:var(--tl)}
+h2{font-size:40px;line-height:1.12;font-weight:800;letter-spacing:-.02em;margin-top:26px}
+.lead{font-size:20px;color:var(--mute);line-height:1.5;margin-top:18px;max-width:600px}
+.chips{display:flex;gap:14px;margin-top:28px}
+.chip{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 16px;font-weight:700;font-size:15px}
+.ic{width:44px;height:44px;border-radius:12px;background:var(--tl2);display:grid;place-items:center;font-size:22px;flex:none}
+.tag{display:inline-block;margin-top:22px;font-size:15px;font-weight:700;color:var(--tl);border-bottom:3px solid var(--tl);padding-bottom:4px}
+.note{font-size:12px;color:var(--mute);margin-top:6px}
+.prop{display:inline-block;font-size:11px;font-weight:700;color:#9a6a12;background:#fff3d6;border-radius:6px;padding:2px 7px;margin-left:6px;vertical-align:middle}
+.hero{position:absolute;right:0;top:0;bottom:0;width:560px;background:linear-gradient(160deg,#e3f3f2,#f6ead9);display:flex;align-items:center;justify-content:center;border-top-left-radius:200px}
+.hero img{width:500px;border-radius:24px;box-shadow:0 20px 50px rgba(107,63,29,.18)}
+.grid{display:grid;gap:18px;margin-top:30px}
+.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}.g5{grid-template-columns:repeat(5,1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px 24px;box-shadow:0 6px 18px rgba(80,50,20,.05)}
+.card h3{font-size:19px;font-weight:800;margin:12px 0 6px}
+.card p{font-size:15px;color:var(--mute);line-height:1.45}
+.big{font-size:62px;font-weight:800;color:var(--tl);letter-spacing:-.03em;line-height:1}
+.src{font-size:12px;color:#9a9088;margin-top:14px}
+.bar{position:absolute;left:64px;right:64px;bottom:34px;background:var(--br);color:#fff;border-radius:18px;padding:18px 26px;font-size:20px;font-weight:700;display:flex;gap:14px;align-items:center}
+.bar small{font-weight:500;opacity:.85;font-size:16px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:24px}
+.step .n{width:44px;height:44px;border-radius:50%;background:var(--tl);color:#fff;font-weight:800;display:grid;place-items:center;font-size:18px}
+.step h3{font-size:20px;margin:10px 0 4px;font-weight:800}
+.step p{font-size:14px;color:var(--mute);line-height:1.4;min-height:58px}
+.step p b{color:var(--ink)}
+.shot{margin-top:12px;height:250px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#fff}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:top}
+.chat{padding:14px;display:flex;flex-direction:column;gap:8px;height:100%;background:#eef4f3;font-size:13px}
+.msg{max-width:85%;padding:8px 11px;border-radius:12px;line-height:1.35}
+.msg.b{background:#fff;align-self:flex-start}.msg.u{background:#d6f0e9;align-self:flex-end}
+.ex{font-size:11px;color:#9a6a12;font-weight:700}
+.road{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px;position:relative}
+.road:before{content:"";position:absolute;left:30px;right:30px;top:21px;height:3px;background:var(--line)}
+.road .dot{width:44px;height:44px;border-radius:50%;background:#fff;border:3px solid var(--tl);position:relative;z-index:1}
+.road .dot.on{background:var(--tl)}
+.road h3{font-size:20px;font-weight:800;margin:14px 0 8px}
+.road ul{list-style:none;font-size:15px;color:var(--mute);line-height:1.6}
+.road li:before{content:"— ";color:var(--tl)}
+.team .ph{width:96px;height:96px;border-radius:50%;background:var(--tl2);border:2px dashed #b9d9d6;margin:0 auto 12px;display:grid;place-items:center;color:#8ab6b2;font-size:30px}
+.team .card{text-align:center}
+.team .card p{font-size:13px}
+.cta{display:flex;gap:40px;align-items:center;margin-top:34px}
+.qr{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;text-align:center;font-size:13px;color:var(--mute);font-weight:700}
+.qr img{width:170px;height:170px;display:block;margin-bottom:6px}
+.done li{list-style:none;font-size:17px;padding:9px 0;border-bottom:1px solid var(--line);display:flex;gap:12px}
+.done li b{color:var(--tl)}
+.nav{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);display:flex;gap:6px;z-index:5}
+.nav i{width:9px;height:9px;border-radius:9px;background:#6b5a4a;cursor:pointer;transition:.2s}
+.nav i.on{width:26px;background:#f0b44a}
+.arr{position:fixed;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:22px;cursor:pointer;z-index:5}
+.arr.p{left:10px}.arr.n{right:10px}
+@media print{.nav,.arr{display:none}}
+</style>
+</head>
+<body>
+<div class="stage" id="st">
+
+<section class="s on">
+ <div class="logo"><img src="img/bobr-avatar.jpg" alt="">Bobr <b>AI</b></div>
+ <h1 style="max-width:620px">Ваши ученики уже решают математику с ИИ.<br><em>Вопрос — понимают ли они.</em></h1>
+ <p class="lead" style="max-width:600px">Bobr AI — готовый ИИ-помощник по математике 5 класса для школы. Ребёнок не получает ответ — он объясняет тему Бобру и так понимает её сам.</p>
+ <div class="chips">
+  <div class="chip"><span class="ic">✅</span>Готов<br>к работе</div>
+  <div class="chip"><span class="ic">👩‍🏫</span>Ведёт ваш<br>учитель</div>
+  <div class="chip"><span class="ic">⚡</span>Запуск за<br>1 неделю<span class="prop">предложение</span></div>
+ </div>
+ <span class="tag">Для частных школ Узбекистана</span>
+ <div class="hero"><img src="img/duet-fix.jpg" alt="Бобр и Хумо"></div>
+</section>
+
+<section class="s">
+ <div class="logo"><img src="img/bobr-avatar.jpg" alt="">Bobr <b>AI</b></div><div class="num">02 · ПРОБЛЕМА</div>
+ <h2>ИИ уже пришёл в домашние задания.<br><em>Вопрос — учит он или решает за ребёнка.</em></h2>
+ <div class="grid g3">
+  <div class="card"><div class="big">26%</div><p style="margin-top:12px">подростков в США 13–17 лет использовали ChatGPT для учёбы — вдвое больше, чем годом ранее (13%)</p><div class="src">Pew Research Center, январь 2025</div></div>
+  <div class="card"><div class="big">54%</div><p style="margin-top:12px">подростков в США пользовались чат-ботами, чтобы получить помощь со школьными заданиями</p><div class="src">Pew Research Center, опрос сентябрь–октябрь 2025</div></div>
+  <div class="card"><div class="big">6,87 млн</div><p style="margin-top:12px">учеников в 11 118 школах Узбекистана в 2025/26 учебном году</p><div class="src">Агентство статистики, по данным UzDaily</div></div>
+ </div>
+ <div class="bar">Готовый ответ от ИИ — не знание.<small>Ребёнок переписывает решение и не понимает, почему оно верное.</small></div>
+</section>
+
+<section class="s">
+ <div class="logo"><img src="img/bobr-avatar.jpg" alt="">Bobr <b>AI</b></div><div class="num">03 · МЕТОД</div>
+ <h2>Метод «учи другого».<br><em>Объясняя, ребёнок понимает сам.</em></h2>
+ <div class="grid g3">
+  <div class="card"><span class="ic">🦫</span><h3>Ребёнок — учитель</h3><p>Бобр — неуклюжий ученик. Он просит: «Устоз, научите меня!» Ребёнок объясняет тему своими словами.</p></div>
+  <div class="card"><span class="ic">🔍</span><h3>Ошибки видны и не страшны</h3><p>Бобр ошибается типичными ошибками 5 класса. Ребёнок находит их и исправляет — это и есть понимание.</p></div>
+  <div class="card"><span class="ic">🐦</span><h3>Подсказки вместо ответов</h3><p>Если трудно — мудрая птица Хумо даёт подсказку-ступеньку. Готового ответа ИИ не даёт никогда.</p></div>
+ </div>
+ <div class="bar">Ребёнок не списывает у ИИ — он учит ИИ.</div>
+</section>
+
+<section class="s">
+ <div class="logo"><img src="img/bobr-avatar.jpg" alt="">Bobr <b>AI</b></div><div class="num">04 · ДЛЯ ШКОЛЫ</div>
+ <h2>Что получает <em>школа</em></h2>
+ <div class="grid g3" style="margin-top:22px">
+  <div class="card"><span class="ic">🏆</span><h3>Аргумент для родителей</h3><p>Современный ИИ-инструмент для дней открытых дверей и маркетинга школы.</p></div>
+  <div class="card"><span class="ic">📊</span><h3>Отчёт по классу</h3><p>Какие темы усвоены, где класс спотыкается.<span class="prop">в разработке</span></p></div>
+  <div class="card"><span class="ic">🛡️</span><h3>Безопасность</h3><p>Нет готовых ответов, Бобр не спрашивает личные данные детей.</p></div>
+ </div>
+ <div class="grid g2" style="margin-top:18px">
+  <div class="card"><span class="ic">⏱️</span><h3>Минимальная нагрузка на учителя</h3><p>Темы и подсказки уже готовы: учитель ведёт урок, а не настраивает систему.</p></div>
+  <div class="card"><span class="ic">🌐</span><h3>Узбекский и русский</h3><p>Бобр отвечает на языке ребёнка. 14 тем программы 5 класса уже в базе.</p></div>
+ </div>
+</section>
+
+<section class="s">
+ <div class="logo"><img src="img/bobr-avatar.jpg" alt="">Bobr <b>AI</b></div><div class="num">05 · УРОК</div>
+ <h2 style="margin-top:20px">Один урок — <em>три шага</em> с учителем</h2>
+ <div class="steps">
+  <div class="step"><div class="n">01</div><h3>Объяснение</h3><p><b>Учитель:</b> объясняет тему, как обычно.<br><b>Ученики:</b> слушают и задают вопросы.</p><div class="shot"><img src="img/site.jpg" alt="Сайт Bobr AI"></div></div>
+  <div class="step"><div class="n">02</div><h3>Ученик учит Бобра</h3><p><b>Ученик:</b> объясняет тему Бобру в Telegram.<br><b>Учитель:</b> помогает тем, кто застрял.</p><div class="shot"><div class="chat"><span class="ex">ПРИМЕР ДИАЛОГА</span><div class="msg b">Салом! 🦫 Ustoz, menga oʻrgating! Что значит дробь ¼?</div><div class="msg u">Торт разрезали на 4 части, и взяли одну.</div><div class="msg b">А если взять две такие части — это сколько? 🤔</div><div class="msg u">2/4 — это же половина!</div></div></div></div>
+  <div class="step"><div class="n">03</div><h3>Игра-закрепление</h3><p><b>Ученик:</b> закрепляет тему в мини-игре.<br><b>Учитель:</b> даёт её как разминку или домашку.</p><div class="shot"><img src="img/game-mem.jpg" alt="Игра «Найди пару»"></div></div>
+ </div>
+</section>
+
+<section class="s">
+ <div class="logo"><img src="img/bobr-avatar.jpg" alt="">Bobr <b>AI</b></div><div class="num">06 · ЧТО УЖЕ РАБОТАЕТ</div>
+ <h2>Прототип сделан <em>за один день</em> — и уже работает</h2>
+ <div style="display:grid;grid-template-columns:1fr 300px;gap:40px;margin-top:22px">
+  <ul class="done">
+   <li><b>✓</b>Telegram-бот @milak_bobr_bot — открыт для всех</li>
+   <li><b>✓</b>14 тем математики 5 класса, лестница подсказок, типичные ошибки</li>
+   <li><b>✓</b>Узбекский и русский языки</li>
+   <li><b>✓</b>Две мини-игры: «Найди пару» и «Плотина Бобра»</li>
+   <li><b>✓</b>Сайт bobrai.pages.dev</li>
+   <li><b>✓</b>Открытый код: github.com/shakhruz/bobr-ai</li>
+  </ul>
+  <div class="shot" style="height:440px;margin:0"><img src="img/game-dam.jpg" alt="Игра «Плотина Бобра»"></div>
+ </div>
+</section>
+
+<section class="s">
+ <div class="logo"><img src="img/bobr-avatar.jpg" alt="">Bobr <b>AI</b></div><div class="num">07 · МОДЕЛЬ</div>
+ <h2>Модель для школы<span class="prop" style="font-size:14px">предложение</span></h2>
+ <div class="grid g3">
+  <div class="card"><span class="ic">🎁</span><h3>Пилот бесплатно</h3><p>Один класс, один месяц. Школа видит результат до оплаты.</p></div>
+  <div class="card"><span class="ic">📄</span><h3>Лицензия на класс</h3><p>Годовая лицензия на класс. Цены — после пилота, по его итогам.</p></div>
+  <div class="card"><span class="ic">🤝</span><h3>Поддержка учителя</h3><p>Короткое знакомство перед запуском и связь с командой весь пилот.</p></div>
+ </div>
+ <div class="bar">Сначала результат в вашем классе — потом разговор о цене.</div>
+</section>
+
+<section class="s">
+ <div class="logo"><img src="img/bobr-avatar.jpg" alt="">Bobr <b>AI</b></div><div class="num">08 · ДОРОЖНАЯ КАРТА</div>
+ <h2>Куда растёт <em>Bobr AI</em></h2>
+ <div class="road">
+  <div><div class="dot on"></div><h3>Сейчас</h3><ul><li>бот и 14 тем 5 класса</li><li>UZ / RU</li><li>две мини-игры</li><li>открытый код</li></ul></div>
+  <div><div class="dot"></div><h3>3 месяца</h3><ul><li>пилот в частной школе</li><li>отчёт по классу для учителя</li><li>голосовые сообщения на узбекском</li></ul></div>
+  <div><div class="dot"></div><h3>1 год</h3><ul><li>6 и 7 класс</li><li>другие предметы</li><li>видеоуроки с Бобром</li></ul></div>
+ </div>
+ <p class="note" style="margin-top:30px">Цели без чисел — числа поставим по итогам пилота.</p>
+</section>
+
+<section class="s team">
+ <div class="logo"><img src="img/bobr-avatar.jpg" alt="">Bobr <b>AI</b></div><div class="num">09 · КОМАНДА</div>
+ <h2>Команда</h2>
+ <div class="grid g5" style="margin-top:34px">
+  <div class="card"><div class="ph">👤</div><h3>Имя</h3><p>Роль · опыт</p></div>
+  <div class="card"><div class="ph">👤</div><h3>Имя</h3><p>Роль · опыт</p></div>
+  <div class="card"><div class="ph">👤</div><h3>Имя</h3><p>Роль · опыт</p></div>
+  <div class="card"><div class="ph">👤</div><h3>Имя</h3><p>Роль · опыт</p></div>
+  <div class="card"><div class="ph">👤</div><h3>Имя</h3><p>Роль · опыт</p></div>
+ </div>
+ <div class="bar">Национальный AI-хакатон · Ташкент · ноябрь 2026<small>ИИ-помощник проекта — Мила, MILAGPT</small></div>
+</section>
+
+<section class="s">
+ <div class="logo"><img src="img/bobr-avatar.jpg" alt="">Bobr <b>AI</b></div><div class="num">10 · СЛЕДУЮЩИЙ ШАГ</div>
+ <h1 style="max-width:720px">Пилот в вашей школе.<br><em>1 класс · 1 месяц · бесплатно.</em></h1>
+ <div class="cta">
+  <div class="qr"><img src="img/qr-bot.png" alt="QR бота">Бобр в Telegram</div>
+  <div class="qr"><img src="img/qr-site.png" alt="QR сайта">bobrai.pages.dev</div>
+  <img src="img/sticker-4.png" alt="" style="width:220px">
+ </div>
+ <p class="note" style="margin-top:16px">Условия пилота — предложение команды, обсуждаются со школой.</p>
+</section>
+
+</div>
+<div class="nav"></div>
+<button class="arr p" aria-label="Назад">‹</button><button class="arr n" aria-label="Вперёд">›</button>
+<script>
+var st=document.getElementById('st');
+function fit(){var k=Math.min(innerWidth/1280,innerHeight/720);st.style.transform='translate(-50%,-50%) scale('+k+')'}
+addEventListener('resize',fit);fit();
+var S=[].slice.call(document.querySelectorAll('.s')),cur=0,nav=document.querySelector('.nav');
+S.forEach(function(_,i){var d=document.createElement('i');d.onclick=function(){go(i)};nav.appendChild(d)});
+function go(i){if(i<0||i>=S.length)return;S[cur].classList.remove('on');cur=i;S[cur].classList.add('on');[].forEach.call(nav.children,function(d,j){d.classList.toggle('on',j===cur)});try{history.replaceState(null,'','#'+(cur+1))}catch(e){}}
+document.addEventListener('keydown',function(e){if(['ArrowRight','PageDown',' '].indexOf(e.key)>-1){e.preventDefault();go(cur+1)}if(['ArrowLeft','PageUp'].indexOf(e.key)>-1){e.preventDefault();go(cur-1)}});
+document.querySelector('.arr.p').onclick=function(){go(cur-1)};document.querySelector('.arr.n').onclick=function(){go(cur+1)};
+var x0=null;document.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});document.addEventListener('touchend',function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)go(cur+(dx<0?1:-1));x0=null});
+var h=parseInt((location.hash||'').slice(1));go(h>0?h-1:0);
+</script>
+</body>
+</html>
